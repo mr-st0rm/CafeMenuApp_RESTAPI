@@ -12,13 +12,10 @@ dish_router = APIRouter(prefix="/menus/{menu_id}/submenus/{submenu_id}/dishes")
 
 
 @dish_router.get("/", response_model=typing.List[res_model.Dish])
-async def get_dishes(submenu_id: int, repo: Repo = Depends(repo_stub)):
-    submenu = await repo.submenu.submenu_info(submenu_id)
+async def get_dishes(repo: Repo = Depends(repo_stub)):
+    dishes = await repo.dish.get_all_dishes()
 
-    if submenu:
-        return submenu.dishes
-
-    raise HTTPException(status_code=404, detail="submenu not found")
+    return dishes
 
 
 @dish_router.get("/{dish_id}", response_model=res_model.Dish)

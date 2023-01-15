@@ -17,6 +17,11 @@ class DishesRepo(SQLAlchemyRepo):
 
         return dish
 
+    async def get_all_dishes(self) -> typing.List[Dishes]:
+        smtp = select(Dishes).order_by(Dishes.id)
+
+        return (await self.session.scalars(smtp)).all()
+
     async def create_dish(self, submenu_id: int, title: str, desc: str, price: float):
         dish = Dishes(sub_menu_id=submenu_id, title=title, description=desc, price=round(price, 2))
 
