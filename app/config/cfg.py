@@ -1,4 +1,6 @@
 import configparser
+import os
+
 from pydantic.dataclasses import dataclass
 
 
@@ -30,6 +32,7 @@ def load_config(cfg_path: str = "cfg.ini") -> AppConfig:
     :param cfg_path: path to config file
     :return: AppConfig object
     """
+    cfg_path = os.getenv("CONFIG_FILE") or cfg_path
     config = configparser.ConfigParser()
     config.read(cfg_path)
 

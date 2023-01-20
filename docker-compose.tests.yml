@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  test_api:
+    container_name: test_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: > 
+      sh -c "
+        pytest -vv --disable-warnings
+      "
+    environment:
+      CONFIG_FILE: "test.ini"
+    networks:
+      - test_network
+    depends_on:
+      - test-db
+  test-db:
+    image: postgres:15.1-alpine
+    container_name: test-db
+    volumes:
+      - postgres_data_test:/var/lib/postgresql_tests/data/
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=test_menu_app
+    restart: on-failure
+    networks:
+      - test_network
+
+networks:
+  test_network:
+    external:
+      name: web_main_api
+
+volumes:
+  postgres_data_test:
