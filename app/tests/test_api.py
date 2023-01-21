@@ -31,6 +31,7 @@ class DishesTempStorage(Base):
 @pytest.mark.asyncio
 class TestRestApi:
     LOCAL_URL = "http://web_api:8000/api/v1/{}"
+    #  change to http://127.0.0.1:8000/api/v1/{} if want run without test_api container by pytest
 
     async def test_menus_list(self, async_client: AsyncClient):
         response = await async_client.get(self.LOCAL_URL.format("menus/"))
