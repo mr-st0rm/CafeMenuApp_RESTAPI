@@ -1,4 +1,4 @@
-import configparser
+import environs
 import os
 
 from pydantic.dataclasses import dataclass
@@ -25,18 +25,27 @@ class AppConfig:
     db: DataBase
 
 
-def load_config(cfg_path: str = "cfg.ini") -> AppConfig:
+def load_config(cfg_path: str = ".prod.env") -> AppConfig:
     """
-    Load and parse config from .ini config file
+    Load and parse config from .env config file
 
     :param cfg_path: path to config file
     :return: AppConfig object
     """
+    env = environs.Env()
     cfg_path = os.getenv("CONFIG_FILE") or cfg_path
-    config = configparser.ConfigParser()
-    config.read(cfg_path)
+    env.read_env(cfg_path)
 
     return AppConfig(
-        app=FastApiApp(**config["app"]),
-        db=DataBase(**config["db"])
+        app=FastApiApp(
+            host=env.str("HOST"),
+            port=env.str("PORT"),
+        ),
+        db=DataBase(
+            host=env.str("PG_HOST"),
+            port=env.int("PG_PORT"),
+            user=env.str("POSTGRES_USER"),
+            password=env.str("POSTGRES_PASSWORD"),
+            db_name=env.str("POSTGRES_DB")
+        )
     )

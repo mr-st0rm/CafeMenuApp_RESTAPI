@@ -11,11 +11,12 @@ services:
         pytest -vv --disable-warnings
       "
     environment:
-      CONFIG_FILE: "test.ini"
+      CONFIG_FILE: ".test.env"
     networks:
       - test_network
     depends_on:
-      - test-db
+      test-db:
+        condition: service_healthy
   test-db:
     image: postgres:15.1-alpine
     container_name: test-db
@@ -23,13 +24,16 @@ services:
       - postgres_data_test:/var/lib/postgresql_tests/data/
     expose:
       - 5432
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=test_menu_app
+    env_file:
+      - ".test.env"
     restart: on-failure
     networks:
       - test_network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   test_network:
