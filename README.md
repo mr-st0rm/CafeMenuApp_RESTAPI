@@ -17,7 +17,6 @@ API написано на FastAPI с использованием ORM **SqlAlche
 
 - Для запуска тестов(app/tests)
   - `docker-compose -f docker-compose.tests.yml up -d`
-  - если хотите запустить тесты **pytest через терминал ПК, а не тестовый контейнер**, замените [ссылку](https://github.com/mr-st0rm/CafeMenuApp_RESTAPI/blob/master/app/tests/test_api.py#L33) на `http://127.0.0.1:8000/api/v1/{}`
 
 Можем посмотреть результаты тестов в логах контейнера под названием `test_api` с помощью команды
 - `docker logs test_api`

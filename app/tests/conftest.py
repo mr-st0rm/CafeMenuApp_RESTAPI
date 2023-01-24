@@ -9,5 +9,5 @@ from main import get_app
 async def async_client() -> AsyncClient:
     app = await get_app(load_config('.test.env'))
 
-    async with AsyncClient(app=app) as client:
+    async with AsyncClient(app=app, base_url="http://tester") as client:
         yield client
