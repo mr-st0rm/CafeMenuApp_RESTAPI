@@ -37,8 +37,7 @@ services:
 
 networks:
   test_network:
-    external:
-      name: web_main_api
+    external: false
 
 volumes:
   postgres_data_test:

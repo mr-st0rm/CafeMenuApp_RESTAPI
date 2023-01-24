@@ -22,16 +22,19 @@ async def init_models(db: DataBase):
         await conn.run_sync(BaseModel.metadata.create_all)
 
 
-def get_app(cfg: AppConfig) -> FastAPI:
+application = FastAPI()
+
+
+async def get_app(cfg: AppConfig) -> FastAPI:
     """
     Main function for configure FastAPI application
 
     :param cfg: AppConfig object
     :return: FastAPI configured object
     """
-    application = FastAPI()
+    global application
 
-    asyncio.run(init_models(cfg.db))
+    await init_models(cfg.db)
 
     #  Database 'async' engine and sessionmaker object
     engine = get_engine(cfg.db)
@@ -57,8 +60,8 @@ def get_app(cfg: AppConfig) -> FastAPI:
 if __name__ == "__main__":
     try:
         config = load_config()
-        app = get_app(config)
+        asyncio.run(get_app(config))
 
-        uvicorn.run(app, host=config.app.host, port=config.app.port)
+        uvicorn.run(application, host=config.app.host, port=config.app.port)
     except (SystemError, KeyboardInterrupt):
         logging.error("Application shutdown")
