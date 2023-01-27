@@ -23,4 +23,3 @@ class SubMenu(BaseMenu):
 
 class Dish(BaseMenu):
     price: str
-

@@ -1,10 +1,12 @@
+import typing
+
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 
 from app.api.v1.docs.menu_methods_description import DishApiDocs
 from app.api.v1.schemas import request as req_model
 from app.api.v1.schemas import response as res_model
-from app.services.service import Services, service_stub
+from app.services.service import service_stub, Services
 
 dish_router = APIRouter(prefix="/menus/{menu_id}/submenus/{submenu_id}/dishes")
 
