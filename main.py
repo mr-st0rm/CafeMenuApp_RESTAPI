@@ -4,15 +4,15 @@ import logging
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
 from app.api import register_api_routes
-from app.config.cfg import DataBase, AppConfig, load_config
+from app.config.cfg import AppConfig, DataBase, load_config
 from app.database import get_engine
 from app.database.models import BaseModel
 from app.database.session_schema import DBProvider, repo_stub
-from app.services.service import service_stub, get_service
+from app.services.service import get_service, service_stub
 
 
 async def init_models(db: DataBase):

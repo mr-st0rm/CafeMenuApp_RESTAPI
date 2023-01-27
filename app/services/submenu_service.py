@@ -1,5 +1,3 @@
-import typing
-
 from fastapi import HTTPException
 
 from app.database.models import SubMenus
@@ -56,7 +54,7 @@ class SubmenuService(AbstractService, ServiceMixin):
         return submenu
 
     @staticmethod
-    def calculate_count_dishes_list(submenus: typing.List[SubMenus]):
+    def calculate_count_dishes_list(submenus: list[SubMenus]):
         result_list = list()
 
         for submenu in submenus:

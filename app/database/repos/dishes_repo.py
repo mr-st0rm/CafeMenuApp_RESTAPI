@@ -1,5 +1,3 @@
-import typing
-
 from sqlalchemy import select
 
 from app.database.models import Dishes
@@ -7,23 +5,24 @@ from app.database.repos import SQLAlchemyRepo
 
 
 class DishesRepo(SQLAlchemyRepo):
-    async def _get_dish(self, dish_id: int) -> typing.Optional[Dishes]:
+    async def _get_dish(self, dish_id: int) -> Dishes | None:
         dish = await self.session.get(Dishes, dish_id)
 
         return dish
 
-    async def dish_info(self, dish_id: int) -> typing.Optional[Dishes]:
+    async def dish_info(self, dish_id: int) -> Dishes | None:
         dish = await self._get_dish(dish_id)
 
         return dish
 
-    async def get_all_dishes(self) -> typing.List[Dishes]:
+    async def get_all_dishes(self) -> list[Dishes]:
         smtp = select(Dishes).order_by(Dishes.id)
 
         return (await self.session.scalars(smtp)).all()
 
     async def create_dish(self, submenu_id: int, title: str, desc: str, price: float):
-        dish = Dishes(sub_menu_id=submenu_id, title=title, description=desc, price=round(price, 2))
+        dish = Dishes(sub_menu_id=submenu_id, title=title,
+                      description=desc, price=round(price, 2))
 
         self.session.add(dish)
         await self.session.commit()

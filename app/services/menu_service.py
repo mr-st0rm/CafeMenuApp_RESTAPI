@@ -20,7 +20,8 @@ class MenuService(AbstractService, ServiceMixin):
 
         for menu in menus:
             submenus_count = len(menu.sub_menus)
-            dishes_count = sum([len(submenu.dishes) for submenu in menu.sub_menus])
+            dishes_count = sum(len(submenu.dishes)
+                               for submenu in menu.sub_menus)
 
             menu.submenus_count = submenus_count
             menu.dishes_count = dishes_count
@@ -56,7 +57,7 @@ class MenuService(AbstractService, ServiceMixin):
     @staticmethod
     def calculate_menu_submenus_and_dishes(menu: Menus):
         submenus_count = len(menu.sub_menus)
-        dishes_count = sum([len(submenu.dishes) for submenu in menu.sub_menus])
+        dishes_count = sum(len(submenu.dishes) for submenu in menu.sub_menus)
 
         menu.submenus_count = submenus_count
         menu.dishes_count = dishes_count

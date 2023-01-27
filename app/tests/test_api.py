@@ -114,7 +114,8 @@ class TestRestApi:
 
         assert SubmenuTempStorage.id == response_json.get("id")
         assert SubmenuTempStorage.title == response_json.get("title")
-        assert SubmenuTempStorage.description == response_json.get("description")
+        assert SubmenuTempStorage.description == response_json.get(
+            "description")
 
     async def test_submenus_list_not_empty(self, async_client: AsyncClient):
         response = await async_client.get(self.LOCAL_URL.format(f"menus/{MenuTempStorage.id}/submenus/"))
@@ -131,7 +132,8 @@ class TestRestApi:
         assert response.status_code == 200
         assert response_json.get("id") == SubmenuTempStorage.id
         assert response_json.get("title") == SubmenuTempStorage.title
-        assert response_json.get("description") == SubmenuTempStorage.description
+        assert response_json.get(
+            "description") == SubmenuTempStorage.description
 
     async def test_update_submenu(self, async_client: AsyncClient):
         data = {
@@ -146,13 +148,15 @@ class TestRestApi:
         assert response.status_code == 200
 
         assert response_json.get("title") != SubmenuTempStorage.title
-        assert response_json.get("description") != SubmenuTempStorage.description
+        assert response_json.get(
+            "description") != SubmenuTempStorage.description
 
         SubmenuTempStorage.title = response_json.get("title")
         SubmenuTempStorage.description = response_json.get("description")
 
         assert response_json.get("title") == SubmenuTempStorage.title
-        assert response_json.get("description") == SubmenuTempStorage.description
+        assert response_json.get(
+            "description") == SubmenuTempStorage.description
 
         await self.test_target_submenu(async_client)
 
@@ -184,7 +188,8 @@ class TestRestApi:
 
         assert DishesTempStorage.id == response_json.get("id")
         assert DishesTempStorage.title == response_json.get("title")
-        assert DishesTempStorage.description == response_json.get("description")
+        assert DishesTempStorage.description == response_json.get(
+            "description")
         assert DishesTempStorage.price == response_json.get("price")
 
     async def test_dishes_list_not_empty(self, async_client: AsyncClient):
@@ -204,7 +209,8 @@ class TestRestApi:
         assert response.status_code == 200
         assert response_json.get("id") == DishesTempStorage.id
         assert response_json.get("title") == DishesTempStorage.title
-        assert response_json.get("description") == DishesTempStorage.description
+        assert response_json.get(
+            "description") == DishesTempStorage.description
         assert response_json.get("price") == DishesTempStorage.price
 
     async def test_update_dish(self, async_client: AsyncClient):
@@ -221,7 +227,8 @@ class TestRestApi:
         assert response.status_code == 200
 
         assert response_json.get("title") != DishesTempStorage.title
-        assert response_json.get("description") != DishesTempStorage.description
+        assert response_json.get(
+            "description") != DishesTempStorage.description
         assert response_json.get("price") != DishesTempStorage.price
 
         DishesTempStorage.title = response_json.get("title")
@@ -229,7 +236,8 @@ class TestRestApi:
         DishesTempStorage.price = response_json.get("price")
 
         assert response_json.get("title") == DishesTempStorage.title
-        assert response_json.get("description") == DishesTempStorage.description
+        assert response_json.get(
+            "description") == DishesTempStorage.description
         assert response_json.get("price") == DishesTempStorage.price
 
         await self.test_target_dish(async_client)
@@ -287,25 +295,25 @@ class TestRestApi:
         assert response_json.get('detail') == "menu not found"
 
     async def test_check_not_valid_id_for_menu(self, async_client: AsyncClient):
-        response = await async_client.get(self.LOCAL_URL.format(f"menus/not_valid_id"))
+        response = await async_client.get(self.LOCAL_URL.format("menus/not_valid_id"))
 
         assert response.status_code == 422
 
     async def test_check_not_exists_menu(self, async_client: AsyncClient):
-        response = await async_client.get(self.LOCAL_URL.format(f"menus/0"))
+        response = await async_client.get(self.LOCAL_URL.format("menus/0"))
 
         assert response.status_code == 404
         assert response.json().get("detail") == "menu not found"
 
     async def test_check_not_exists_submenu(self, async_client: AsyncClient):
-        response = await async_client.get(self.LOCAL_URL.format(f"menus/1/submenus/0"))
+        response = await async_client.get(self.LOCAL_URL.format("menus/1/submenus/0"))
 
         assert response.status_code == 404
         assert response.json().get("detail") == "submenu not found"
 
     async def test_check_not_exists_dish(self, async_client: AsyncClient):
         response = await async_client.get(self.LOCAL_URL.format(
-            f"menus/1/submenus/1/dishes/0")
+            "menus/1/submenus/1/dishes/0")
         )
 
         assert response.status_code == 404

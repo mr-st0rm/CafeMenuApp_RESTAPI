@@ -1,12 +1,10 @@
-import typing
-
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 
+from app.api.v1.docs.menu_methods_description import MenuApiDocs
 from app.api.v1.schemas import request as req_model
 from app.api.v1.schemas import response as res_model
-from app.services.service import service_stub, Services
-from app.api.v1.docs.menu_methods_description import MenuApiDocs
+from app.services.service import Services, service_stub
 
 menu_router = APIRouter(prefix="/menus")
 
@@ -14,7 +12,7 @@ menu_router = APIRouter(prefix="/menus")
 @menu_router.get(
     "/",
     tags=["Menu"], description=MenuApiDocs.GET_LIST, summary=MenuApiDocs.GET_LIST,
-    response_model=typing.List[res_model.Menu]
+    response_model=list[res_model.Menu]
 )
 async def get_menus(services: Services = Depends(service_stub)):
     all_menus = await services.menu_service.get_list()
@@ -60,4 +58,3 @@ async def delete_menu(menu_id: int, services: Services = Depends(service_stub)):
     menu = await services.menu_service.delete(menu_id)
 
     return JSONResponse(content={"status": menu, "message": "The menu has been deleted"})
-

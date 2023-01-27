@@ -15,7 +15,7 @@ def service_stub():
 
     :return: Nothing
     """
-    raise NotImplemented
+    raise NotImplementedError
 
 
 @dataclass

@@ -1,12 +1,10 @@
-import typing
-
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 
+from app.api.v1.docs.menu_methods_description import SubMenuApiDocs
 from app.api.v1.schemas import request as req_model
 from app.api.v1.schemas import response as res_model
 from app.services.service import Services, service_stub
-from app.api.v1.docs.menu_methods_description import SubMenuApiDocs
 
 submenu_router = APIRouter(prefix="/menus/{menu_id}/submenus")
 
@@ -14,7 +12,7 @@ submenu_router = APIRouter(prefix="/menus/{menu_id}/submenus")
 @submenu_router.get(
     "/",
     tags=["Submenu"], description=SubMenuApiDocs.GET_LIST, summary=SubMenuApiDocs.GET_LIST,
-    response_model=typing.List[res_model.SubMenu]
+    response_model=list[res_model.SubMenu]
 )
 async def get_all_submenus(menu_id: int, services: Services = Depends(service_stub)):
     submenus = await services.submenu_service.get_list(menu_id=menu_id)

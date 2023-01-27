@@ -2,12 +2,12 @@ import typing
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.database.repos.repo import Repo, MenuRepo, SubMenuRepo, DishesRepo
+from app.database.repos.repo import DishesRepo, MenuRepo, Repo, SubMenuRepo
 
 
 def repo_stub():
     """ Yes, really """
-    raise NotImplemented
+    raise NotImplementedError
 
 
 class DBProvider:

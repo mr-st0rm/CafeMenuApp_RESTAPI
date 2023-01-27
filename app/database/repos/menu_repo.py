@@ -1,5 +1,3 @@
-import typing
-
 from sqlalchemy import select
 
 from app.database.models import Menus
@@ -7,12 +5,12 @@ from app.database.repos import SQLAlchemyRepo
 
 
 class MenuRepo(SQLAlchemyRepo):
-    async def _get_menu(self, menu_id: int) -> typing.Optional[Menus]:
+    async def _get_menu(self, menu_id: int) -> Menus | None:
         menu = await self.session.get(Menus, menu_id)
 
         return menu
 
-    async def menu_info(self, menu_id: int) -> typing.Optional[Menus]:
+    async def menu_info(self, menu_id: int) -> Menus | None:
         menu = await self._get_menu(menu_id)
 
         return menu

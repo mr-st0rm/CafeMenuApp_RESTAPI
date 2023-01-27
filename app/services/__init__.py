@@ -27,6 +27,6 @@ class AbstractService(ABC):
 
 
 class ServiceMixin:
-    def __init__(self, repo: Union[MenuRepo, SubMenuRepo, DishesRepo], main_repo: Optional[Repo] = None):
+    def __init__(self, repo: MenuRepo | SubMenuRepo | DishesRepo, main_repo: Repo | None = None):
         self.repo = repo
         self.main_repo = main_repo

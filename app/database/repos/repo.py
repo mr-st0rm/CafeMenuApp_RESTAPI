@@ -1,5 +1,3 @@
-from typing import Type
-
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .dishes_repo import DishesRepo
@@ -15,9 +13,9 @@ class Repo:
     def __init__(
             self,
             session: AsyncSession,
-            menu: Type[MenuRepo],
-            submenu: Type[SubMenuRepo],
-            dish: Type[DishesRepo]
+            menu: type[MenuRepo],
+            submenu: type[SubMenuRepo],
+            dish: type[DishesRepo]
     ):
         self.menu = menu(session)
         self.submenu = submenu(session)

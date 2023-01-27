@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, func
+from sqlalchemy import Column, DateTime, Integer, String, func
 from sqlalchemy.orm import relationship
 
 from app.database.models import BaseModel
@@ -12,7 +12,8 @@ class Menus(BaseModel):
     title = Column(String)
     description = Column(String)
 
-    sub_menus = relationship("SubMenus", backref="menu", lazy="selectin", cascade="all, delete")
+    sub_menus = relationship("SubMenus", backref="menu",
+                             lazy="selectin", cascade="all, delete")
 
     created_date = Column(DateTime(timezone=True), default=func.now())
 

@@ -1,5 +1,3 @@
-import typing
-
 from sqlalchemy import select
 
 from app.database.models import SubMenus
@@ -7,18 +5,19 @@ from app.database.repos import SQLAlchemyRepo
 
 
 class SubMenuRepo(SQLAlchemyRepo):
-    async def _get_submenu(self, submenu_id: int) -> typing.Optional[SubMenus]:
+    async def _get_submenu(self, submenu_id: int) -> SubMenus | None:
         submenu = await self.session.get(SubMenus, submenu_id)
 
         return submenu
 
-    async def get_all_submenus_for_menu(self, menu_id: int) -> typing.List[SubMenus]:
-        smtp = select(SubMenus).where(SubMenus.menu_id == menu_id).order_by(SubMenus.id)
+    async def get_all_submenus_for_menu(self, menu_id: int) -> list[SubMenus]:
+        smtp = select(SubMenus).where(
+            SubMenus.menu_id == menu_id).order_by(SubMenus.id)
         submenus = await self.session.scalars(smtp)
 
         return submenus.all()
 
-    async def submenu_info(self, submenu_id: int) -> typing.Optional[SubMenus]:
+    async def submenu_info(self, submenu_id: int) -> SubMenus | None:
         submenu = await self._get_submenu(submenu_id)
 
         return submenu
