@@ -31,29 +31,22 @@ class DishesRepo(SQLAlchemyRepo):
 
         return dish
 
-    async def update_dish(self, dish_id: int, title: str = None, desc: str = None, price: float = 0):
-        """ Not so good func, at now I dont know how make it more clear so"""
+    async def update_dish(self, dish_id: int, **kwargs):
         dish = await self._get_dish(dish_id)
 
-        if dish:
-            if title:
-                dish.title = title
-            if desc:
-                dish.description = desc
+        for k, v in kwargs.items():
+            if hasattr(dish, k):
+                setattr(dish, k, v)
 
-            if price:
-                dish.price = round(price, 2)
+        await self.session.commit()
+        await self.session.refresh(dish)
 
-            await self.session.commit()
-            await self.session.refresh(dish)
-
-            return dish
+        return dish
 
     async def delete_dish(self, dish_id: int):
         dish = await self._get_dish(dish_id)
 
-        if dish:
-            await self.session.delete(dish)
-            await self.session.commit()
+        await self.session.delete(dish)
+        await self.session.commit()
 
-            return True
+        return True

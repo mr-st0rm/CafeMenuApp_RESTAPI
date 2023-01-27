@@ -1,6 +1,6 @@
-import environs
 import os
 
+import environs
 from pydantic.dataclasses import dataclass
 
 

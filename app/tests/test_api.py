@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
 import pytest
-
 from httpx import AsyncClient
 
 

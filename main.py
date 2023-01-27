@@ -12,6 +12,7 @@ from app.config.cfg import DataBase, AppConfig, load_config
 from app.database import get_engine
 from app.database.models import BaseModel
 from app.database.session_schema import DBProvider, repo_stub
+from app.services.service import service_stub, get_service
 
 
 async def init_models(db: DataBase):
@@ -39,10 +40,11 @@ async def get_app(cfg: AppConfig) -> FastAPI:
     #  Database 'async' engine and sessionmaker object
     engine = get_engine(cfg.db)
     db_pool = sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
-    provider = DBProvider(db_pool)
+    repo_provider = DBProvider(db_pool)
 
     # DI in order to overturn the repository and ensure the independence of the handler from creation of the repository
-    application.dependency_overrides[repo_stub] = provider.get_repo
+    application.dependency_overrides[repo_stub] = repo_provider.get_repo
+    application.dependency_overrides[service_stub] = get_service
 
     #  register CORS middleware
     application.add_middleware(

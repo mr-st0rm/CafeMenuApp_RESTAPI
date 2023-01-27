@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 
 from .events import event_handler
+from .v1.routes.dish_routes import dish_router
 from .v1.routes.menu_routes import menu_router
 from .v1.routes.submenu_router import submenu_router
-from .v1.routes.dish_routes import dish_router
 
 
 def register_api_routes(app: FastAPI):

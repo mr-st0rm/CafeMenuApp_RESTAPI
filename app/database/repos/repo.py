@@ -2,9 +2,9 @@ from typing import Type
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from .dishes_repo import DishesRepo
 from .menu_repo import MenuRepo
 from .sub_menu_repo import SubMenuRepo
-from .dishes_repo import DishesRepo
 
 
 class Repo:

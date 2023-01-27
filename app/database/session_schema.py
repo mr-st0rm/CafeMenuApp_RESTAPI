@@ -1,4 +1,3 @@
-import abc
 import typing
 
 from sqlalchemy.ext.asyncio import AsyncSession

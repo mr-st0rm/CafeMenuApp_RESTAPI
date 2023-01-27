@@ -32,26 +32,22 @@ class SubMenuRepo(SQLAlchemyRepo):
 
         return submenu
 
-    async def update_submenu(self, submenu_id: int, title: str = None, desc: str = None):
-        """ Not so good func, at now I dont know how make it more clear so"""
+    async def update_submenu(self, submenu_id: int, **kwargs):
         submenu = await self._get_submenu(submenu_id)
 
-        if submenu:
-            if title:
-                submenu.title = title
-            if desc:
-                submenu.description = desc
+        for k, v in kwargs.items():
+            if hasattr(submenu, k):
+                setattr(submenu, k, v)
 
-            await self.session.commit()
-            await self.session.refresh(submenu)
+        await self.session.commit()
+        await self.session.refresh(submenu)
 
-            return submenu
+        return submenu
 
     async def delete_submenu(self, submenu_id: int):
         submenu = await self._get_submenu(submenu_id)
 
-        if submenu:
-            await self.session.delete(submenu)
-            await self.session.commit()
+        await self.session.delete(submenu)
+        await self.session.commit()
 
-            return True
+        return True

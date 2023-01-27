@@ -1,58 +1,47 @@
 import typing
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 
-from app.database.repos.repo import Repo
-from app.database.session_schema import repo_stub
 from app.api.v1.schemas import request as req_model
 from app.api.v1.schemas import response as res_model
+from app.services.service import service_stub, Services
 
 dish_router = APIRouter(prefix="/menus/{menu_id}/submenus/{submenu_id}/dishes")
 
 
 @dish_router.get("/", response_model=typing.List[res_model.Dish])
-async def get_dishes(repo: Repo = Depends(repo_stub)):
-    dishes = await repo.dish.get_all_dishes()
+async def get_dishes(services: Services = Depends(service_stub)):
+    dishes = await services.dishes_service.get_list()
 
     return dishes
 
 
 @dish_router.get("/{dish_id}", response_model=res_model.Dish)
-async def get_dish_information(dish_id: int, repo: Repo = Depends(repo_stub)):
-    dish = await repo.dish.dish_info(dish_id)
+async def get_dish_information(dish_id: int, services: Services = Depends(service_stub)):
+    dish = await services.dishes_service.get_detail(dish_id=dish_id)
 
-    if dish:
-        return dish
-
-    raise HTTPException(status_code=404, detail="dish not found")
+    return dish
 
 
 @dish_router.post("/", response_model=res_model.Dish, status_code=201)
-async def create_dish(submenu_id: int, dish: req_model.Dish, repo: Repo = Depends(repo_stub)):
-    dish = await repo.dish.create_dish(submenu_id, dish.title, dish.description, dish.price)
+async def create_dish(submenu_id: int, dish: req_model.Dish, services: Services = Depends(service_stub)):
+    dish = await services.dishes_service.create(submenu_id, dish.title, dish.description, dish.price)
 
-    if dish:
-        return dish
-
-    raise HTTPException(status_code=404, detail="submenu not found")
+    return dish
 
 
 @dish_router.patch("/{dish_id}", response_model=res_model.Dish)
-async def update_dish(dish_id: int, dish: req_model.Dish, repo: Repo = Depends(repo_stub)):
-    dish = await repo.dish.update_dish(dish_id, dish.title, dish.description, dish.price)
+async def update_dish(dish_id: int, dish: req_model.Dish, services: Services = Depends(service_stub)):
+    dish = await services.dishes_service.update(
+        dish_id, title=dish.title, description=dish.description, price=dish.price
+    )
 
-    if dish:
-        return dish
-
-    raise HTTPException(status_code=404, detail="dish not found")
+    return dish
 
 
 @dish_router.delete("/{dish_id}")
-async def delete_dish(dish_id: int, repo: Repo = Depends(repo_stub)):
-    dish = await repo.dish.delete_dish(dish_id)
+async def delete_dish(dish_id: int, services: Services = Depends(service_stub)):
+    dish = await services.dishes_service.delete(dish_id)
 
-    if dish:
-        return JSONResponse(content={"status": dish, "message": "The dish has been deleted"})
-
-    raise HTTPException(status_code=404, detail="dish not found")
+    return JSONResponse(content={"status": dish, "message": "The dish has been deleted"})

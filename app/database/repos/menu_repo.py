@@ -32,26 +32,20 @@ class MenuRepo(SQLAlchemyRepo):
 
         return menu
 
-    async def update_menu(self, menu_id: int, title: str = None, desc: str = None):
-        """ Not so good func, at now I dont know how make it more clear so"""
+    async def update_menu(self, menu_id: int, **kwargs):
         menu = await self._get_menu(menu_id)
 
-        if menu:
-            if title:
-                menu.title = title
-            if desc:
-                menu.description = desc
+        for k, v in kwargs.items():
+            if hasattr(menu, k):
+                setattr(menu, k, v)
 
-            await self.session.commit()
-            await self.session.refresh(menu)
+        await self.session.commit()
+        await self.session.refresh(menu)
 
-            return menu
+        return menu
 
     async def delete_menu(self, menu_id: int):
         menu = await self._get_menu(menu_id)
 
-        if menu:
-            await self.session.delete(menu)
-            await self.session.commit()
-
-            return True
+        await self.session.delete(menu)
+        await self.session.commit()
