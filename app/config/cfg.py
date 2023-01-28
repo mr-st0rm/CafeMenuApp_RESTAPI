@@ -20,9 +20,17 @@ class DataBase:
 
 
 @dataclass
+class RedisCache:
+    host: str
+    port: int
+    db_id: int
+
+
+@dataclass
 class AppConfig:
     app: FastApiApp
     db: DataBase
+    redis: RedisCache
 
 
 def load_config(cfg_path: str = ".prod.env") -> AppConfig:
@@ -47,5 +55,10 @@ def load_config(cfg_path: str = ".prod.env") -> AppConfig:
             user=env.str("POSTGRES_USER"),
             password=env.str("POSTGRES_PASSWORD"),
             db_name=env.str("POSTGRES_DB")
+        ),
+        redis=RedisCache(
+            host=env.str("RS_HOST"),
+            port=env.int("RS_PORT"),
+            db_id=env.int("RS_DB"),
         )
     )

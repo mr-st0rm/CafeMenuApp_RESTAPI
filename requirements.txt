@@ -8,3 +8,4 @@ pytest_asyncio==0.20.3
 httpx==0.23.3
 environs==9.5.0
 pre-commit==3.0.1
+aioredis==2.0.1

@@ -11,6 +11,7 @@ from app.api import register_api_routes
 from app.config.cfg import AppConfig, DataBase, load_config
 from app.database import get_engine
 from app.database.models import BaseModel
+from app.database.redis_cache import redis_stub, RedisProvider
 from app.database.session_schema import DBProvider, repo_stub
 from app.services.service import get_service, service_stub
 
@@ -41,10 +42,12 @@ async def get_app(cfg: AppConfig) -> FastAPI:
     engine = get_engine(cfg.db)
     db_pool = sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
     repo_provider = DBProvider(db_pool)
+    redis = RedisProvider(cfg.redis)
 
     # DI in order to overturn the repository and ensure the independence of the handler from creation of the repository
     application.dependency_overrides[repo_stub] = repo_provider.get_repo
     application.dependency_overrides[service_stub] = get_service
+    application.dependency_overrides[redis_stub] = redis.get_redis
 
     #  register CORS middleware
     application.add_middleware(

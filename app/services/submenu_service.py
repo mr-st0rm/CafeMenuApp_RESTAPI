@@ -6,23 +6,41 @@ from app.services import AbstractService, ServiceMixin
 
 class SubmenuService(AbstractService, ServiceMixin):
     async def get_detail(self, submenu_id: int):
+        cached_submenu = await self.redis_cache.get_data(f"submenu:{submenu_id}")
+
+        if cached_submenu:
+            return cached_submenu
+
         submenu = await self.repo.submenu_info(submenu_id=submenu_id)
 
         if not submenu:
             raise HTTPException(status_code=404, detail="submenu not found")
 
-        return self.calculate_count_dishes(submenu)
+        response_data = self.calculate_count_dishes(submenu)
+        await self.redis_cache.save(f"submenu:{submenu_id}", response_data)
+
+        return response_data
 
     async def get_list(self, menu_id: int):
+        cached_submenus = await self.redis_cache.get_data(f"submenus:{menu_id}")
+
+        if cached_submenus:
+            return cached_submenus
+
         menu = await self.main_repo.menu.menu_info(menu_id=menu_id)
 
         if not menu:
             raise HTTPException(status_code=404, detail="menu not found")
 
-        return self.calculate_count_dishes_list(menu.sub_menus)
+        submenus = self.calculate_count_dishes_list(menu.sub_menus)
+        await self.redis_cache.save(f"submenus:{menu_id}", submenus)
+
+        return submenus
 
     async def create(self, menu_id: int, title: str, description: str):
         submenu = await self.repo.create_submenu(menu_id=menu_id, title=title, desc=description)
+
+        await self.redis_cache.clear()
 
         return self.calculate_count_dishes(submenu)
 
@@ -34,7 +52,11 @@ class SubmenuService(AbstractService, ServiceMixin):
 
         submenu = await self.repo.update_submenu(submenu_id, **kwargs)
 
-        return self.calculate_count_dishes(submenu)
+        updated_submenu = self.calculate_count_dishes(submenu)
+        await self.redis_cache.save(f"submenu:{submenu.id}", updated_submenu)
+        await self.redis_cache.clear(f"submenus:{submenu.menu_id}")
+
+        return updated_submenu
 
     async def delete(self, submenu_id: int):
         submenu = await self.repo.submenu_info(submenu_id=submenu_id)
@@ -43,6 +65,8 @@ class SubmenuService(AbstractService, ServiceMixin):
             raise HTTPException(status_code=404, detail="submenu not found")
 
         await self.repo.delete_submenu(submenu_id=submenu_id)
+        await self.redis_cache.clear()
+
         return True
 
     @staticmethod
