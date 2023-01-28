@@ -5,7 +5,13 @@ from app.services import AbstractService, ServiceMixin
 
 
 class MenuService(AbstractService, ServiceMixin):
-    async def get_detail(self, menu_id: int):
+    async def get_detail(self, menu_id: int) -> Menus:
+        """
+        Get menu object(db, cache) or raise error(404)
+
+        :param menu_id: target menu id
+        :return: menu object
+        """
         cached_menu = await self.redis_cache.get_data(f"menu:{menu_id}")
 
         if cached_menu:
@@ -21,7 +27,12 @@ class MenuService(AbstractService, ServiceMixin):
 
         return response_data
 
-    async def get_list(self):
+    async def get_list(self) -> list[Menus]:
+        """
+        Get list of menus(db, cache) and save to cache
+
+        :return: list of menu objects
+        """
         cached_menus = await self.redis_cache.get_data("menus")
 
         if cached_menus:
@@ -46,7 +57,14 @@ class MenuService(AbstractService, ServiceMixin):
 
         return result_menu
 
-    async def create(self, title: str, description: str):
+    async def create(self, title: str, description: str) -> Menus:
+        """
+        Create new menu and clear menus list from cache
+
+        :param title: menu title
+        :param description: menu description
+        :return: created menu object
+        """
         menu = await self.repo.create_menu(title=title, desc=description)
 
         menu_data = self.calculate_menu_submenus_and_dishes(menu)
@@ -54,7 +72,14 @@ class MenuService(AbstractService, ServiceMixin):
 
         return menu_data
 
-    async def update(self, menu_id: int, **kwargs):
+    async def update(self, menu_id: int, **kwargs) -> Menus:
+        """
+        Update menu(db), clear target menu and menus list from cache
+
+        :param menu_id: target menu id
+        :param kwargs: attributes of menu
+        :return: updated object of Menus
+        """
         menu = await self.repo.menu_info(menu_id=menu_id)
 
         if not menu:
@@ -68,7 +93,13 @@ class MenuService(AbstractService, ServiceMixin):
 
         return updated_menu
 
-    async def delete(self, menu_id: int):
+    async def delete(self, menu_id: int) -> bool:
+        """
+        Delete menu from db, clear target menu and menus list from cache
+
+        :param menu_id: target menu id
+        :return: bool
+        """
         menu = await self.repo.menu_info(menu_id=menu_id)
 
         if not menu:
@@ -80,7 +111,13 @@ class MenuService(AbstractService, ServiceMixin):
         return True
 
     @staticmethod
-    def calculate_menu_submenus_and_dishes(menu: Menus):
+    def calculate_menu_submenus_and_dishes(menu: Menus) -> Menus:
+        """
+        Calculate submenus and dishes count for menu
+
+        :param menu: target menu
+        :return: Menu modified object
+        """
         submenus_count = len(menu.sub_menus)
         dishes_count = sum(len(submenu.dishes) for submenu in menu.sub_menus)
 

@@ -5,7 +5,13 @@ from app.services import AbstractService, ServiceMixin
 
 
 class SubmenuService(AbstractService, ServiceMixin):
-    async def get_detail(self, submenu_id: int):
+    async def get_detail(self, submenu_id: int) -> SubMenus:
+        """
+        Get submenu object(db, cache) or raise error(404)
+
+        :param submenu_id: target submenu id
+        :return: submenu object
+        """
         cached_submenu = await self.redis_cache.get_data(f"submenu:{submenu_id}")
 
         if cached_submenu:
@@ -21,7 +27,13 @@ class SubmenuService(AbstractService, ServiceMixin):
 
         return response_data
 
-    async def get_list(self, menu_id: int):
+    async def get_list(self, menu_id: int) -> list[SubMenus]:
+        """
+        Get list of submenus(db, cache) and save to cache
+
+        :param menu_id: target menu id where submenus linked
+        :return: list of submenu objects
+        """
         cached_submenus = await self.redis_cache.get_data(f"submenus:{menu_id}")
 
         if cached_submenus:
@@ -37,14 +49,29 @@ class SubmenuService(AbstractService, ServiceMixin):
 
         return submenus
 
-    async def create(self, menu_id: int, title: str, description: str):
+    async def create(self, menu_id: int, title: str, description: str) -> SubMenus:
+        """
+
+
+        :param menu_id:
+        :param title:
+        :param description:
+        :return:
+        """
         submenu = await self.repo.create_submenu(menu_id=menu_id, title=title, desc=description)
 
         await self.redis_cache.clear()
 
         return self.calculate_count_dishes(submenu)
 
-    async def update(self, submenu_id: int, **kwargs):
+    async def update(self, submenu_id: int, **kwargs) -> SubMenus:
+        """
+        Update submenu(db) and clear submenus list from cache
+
+        :param submenu_id: target submenu id
+        :param kwargs: attributes of submenu
+        :return: updated object of SubMenus
+        """
         submenu = await self.repo.submenu_info(submenu_id=submenu_id)
 
         if not submenu:
@@ -58,7 +85,13 @@ class SubmenuService(AbstractService, ServiceMixin):
 
         return updated_submenu
 
-    async def delete(self, submenu_id: int):
+    async def delete(self, submenu_id: int) -> bool:
+        """
+        Delete submenu from db and clear cache
+
+        :param submenu_id: target submenu id
+        :return: bool
+        """
         submenu = await self.repo.submenu_info(submenu_id=submenu_id)
 
         if not submenu:
@@ -70,7 +103,13 @@ class SubmenuService(AbstractService, ServiceMixin):
         return True
 
     @staticmethod
-    def calculate_count_dishes(submenu: SubMenus):
+    def calculate_count_dishes(submenu: SubMenus) -> SubMenus:
+        """
+        Calculate dishes count for submenu
+
+        :param submenu: submenu object
+        :return: SubMenus modified object
+        """
         dishes_count = len(submenu.dishes)
 
         submenu.dishes_count = dishes_count
@@ -78,7 +117,13 @@ class SubmenuService(AbstractService, ServiceMixin):
         return submenu
 
     @staticmethod
-    def calculate_count_dishes_list(submenus: list[SubMenus]):
+    def calculate_count_dishes_list(submenus: list[SubMenus]) -> list[SubMenus]:
+        """
+        Calculate dishes count for submenus
+
+        :param submenus: submenu objects list
+        :return: SubMenus modified objects list
+        """
         result_list = list()
 
         for submenu in submenus:

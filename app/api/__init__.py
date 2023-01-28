@@ -11,7 +11,6 @@ def register_api_routes(app: FastAPI):
     Register all routes
 
     :param app: FastAPI obj
-    :return: None
     """
     app.include_router(event_handler)
     app.include_router(menu_router, prefix="/api/v1")

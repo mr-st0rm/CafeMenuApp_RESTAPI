@@ -13,11 +13,7 @@ from app.services.submenu_service import SubmenuService
 
 
 def service_stub():
-    """
-    Just DI for overwrite getting service
-
-    :return: Nothing
-    """
+    """Just DI for overwrite getting service"""
     raise NotImplementedError
 
 

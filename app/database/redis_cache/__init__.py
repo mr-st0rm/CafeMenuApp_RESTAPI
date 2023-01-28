@@ -17,4 +17,9 @@ class RedisProvider:
         self.redis = aioredis.Redis(connection_pool=self.pool, decode_responses=True)
 
     def get_redis(self) -> aioredis.Redis:
+        """
+        Get Redis object for dependency
+
+        :return: object of aioredis.Redis
+        """
         return self.redis

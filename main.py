@@ -17,7 +17,11 @@ from app.services.service import get_service, service_stub
 
 
 async def init_models(db: DataBase):
-    """ Create all tables in database """
+    """
+    Create all tables in database
+
+    :param db: DB config class
+    """
     engine: AsyncEngine = get_engine(db)
 
     async with engine.begin() as conn:

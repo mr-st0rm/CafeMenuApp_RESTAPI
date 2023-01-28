@@ -1,4 +1,5 @@
 class MenuApiDocs:
+    """Documentation descriptions for Menu urls"""
     GET_DETAIL = "Get detailed information about menu"
     GET_LIST = "Get list of menus"
     POST_CREATE = "Create new menu"
@@ -7,6 +8,7 @@ class MenuApiDocs:
 
 
 class SubMenuApiDocs:
+    """Documentation descriptions for SubMenu urls"""
     GET_DETAIL = "Get detailed information about submenu"
     GET_LIST = "Get list of submenus for an existing menu"
     POST_CREATE = "Create new submenu"
@@ -15,6 +17,7 @@ class SubMenuApiDocs:
 
 
 class DishApiDocs:
+    """Documentation descriptions for Dish urls"""
     GET_DETAIL = "Get detailed information about dish"
     GET_LIST = "Get list of all dishes"
     POST_CREATE = "Create new dish"

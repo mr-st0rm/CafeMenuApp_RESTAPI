@@ -1,10 +1,17 @@
 from fastapi import HTTPException
 
+from app.database.models import Dishes
 from app.services import AbstractService, ServiceMixin
 
 
 class DishesService(AbstractService, ServiceMixin):
-    async def get_detail(self, dish_id: int):
+    async def get_detail(self, dish_id: int) -> Dishes:
+        """
+        Get dish object(db, cache) or raise error(404)
+
+        :param dish_id: target dish id
+        :return: dish object
+        """
         cached_dish = await self.redis_cache.get_data(f"dish:{dish_id}")
 
         if cached_dish:
@@ -19,7 +26,12 @@ class DishesService(AbstractService, ServiceMixin):
 
         return dish
 
-    async def get_list(self):
+    async def get_list(self) -> list[Dishes]:
+        """
+        Get list of dishes(db, cache) and save to cache
+
+        :return: list of dish objects
+        """
         cached_dishes = await self.redis_cache.get_data("dishes")
 
         if cached_dishes:
@@ -30,7 +42,16 @@ class DishesService(AbstractService, ServiceMixin):
 
         return dishes
 
-    async def create(self, submenu_id: int, title: str, description: str, price: float):
+    async def create(self, submenu_id: int, title: str, description: str, price: float) -> Dishes:
+        """
+        Create new dish and clear cache
+
+        :param submenu_id: target submenu id for linking
+        :param title: dish title
+        :param description: dish description
+        :param price: float
+        :return: created dish object
+        """
         submenu = await self.main_repo.submenu.submenu_info(submenu_id=submenu_id)
 
         if not submenu:
@@ -41,7 +62,14 @@ class DishesService(AbstractService, ServiceMixin):
 
         return dish
 
-    async def update(self, dish_id: int, **kwargs):
+    async def update(self, dish_id: int, **kwargs) -> Dishes:
+        """
+        Update dish(db) and clear dishes list from cache
+
+        :param dish_id: target dish id
+        :param kwargs: attributes of dish
+        :return: updated object of Dish
+        """
         dish = await self.main_repo.dish.dish_info(dish_id)
 
         if not dish:
@@ -59,7 +87,13 @@ class DishesService(AbstractService, ServiceMixin):
 
         return dish
 
-    async def delete(self, dish_id: int):
+    async def delete(self, dish_id: int) -> bool:
+        """
+        Delete dish from db and clear cache
+
+        :param dish_id: target dish id
+        :return: bool
+        """
         dish = await self.repo.dish_info(dish_id=dish_id)
 
         if not dish:

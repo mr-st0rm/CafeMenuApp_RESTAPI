@@ -14,7 +14,13 @@ dish_router = APIRouter(prefix="/menus/{menu_id}/submenus/{submenu_id}/dishes")
     tags=["Dish"], description=DishApiDocs.GET_LIST, summary=DishApiDocs.GET_LIST,
     response_model=list[res_model.Dish]
 )
-async def get_dishes(services: Services = Depends(service_stub)):
+async def get_dishes(services: Services = Depends(service_stub)) -> list[res_model.Dish]:
+    """
+    Get list of all dishes
+
+    :param services: Services for business logic
+    :return: list of Dish
+    """
     dishes = await services.dishes_service.get_list()
 
     return dishes
@@ -25,7 +31,14 @@ async def get_dishes(services: Services = Depends(service_stub)):
     tags=["Dish"], description=DishApiDocs.GET_DETAIL, summary=DishApiDocs.GET_DETAIL,
     response_model=res_model.Dish
 )
-async def get_dish_information(dish_id: int, services: Services = Depends(service_stub)):
+async def get_dish_information(dish_id: int, services: Services = Depends(service_stub)) -> res_model.Dish:
+    """
+    Get detailed info about dish
+
+    :param dish_id: id of target dish
+    :param services: Services for business logic
+    :return: target Dish or not found
+    """
     dish = await services.dishes_service.get_detail(dish_id=dish_id)
 
     return dish
@@ -37,6 +50,14 @@ async def get_dish_information(dish_id: int, services: Services = Depends(servic
     response_model=res_model.Dish, status_code=201
 )
 async def create_dish(submenu_id: int, dish: req_model.Dish, services: Services = Depends(service_stub)):
+    """
+    Create new dish for target SubMenu
+
+    :param submenu_id: submenu id
+    :param dish: parsed Dish model from request
+    :param services: Services for business logic
+    :return: model of created Dish
+    """
     dish = await services.dishes_service.create(submenu_id, dish.title, dish.description, dish.price)
 
     return dish
@@ -48,6 +69,14 @@ async def create_dish(submenu_id: int, dish: req_model.Dish, services: Services 
     response_model=res_model.Dish
 )
 async def update_dish(dish_id: int, dish: req_model.Dish, services: Services = Depends(service_stub)):
+    """
+    Update an exists dish
+
+    :param dish_id: id of target dish
+    :param dish: parser Dish model from request
+    :param services: Services for business logic
+    :return: updated Dish model
+    """
     dish = await services.dishes_service.update(
         dish_id, title=dish.title, description=dish.description, price=dish.price
     )
@@ -57,6 +86,13 @@ async def update_dish(dish_id: int, dish: req_model.Dish, services: Services = D
 
 @dish_router.delete("/{dish_id}", tags=["Dish"], description=DishApiDocs.DELETE, summary=DishApiDocs.DELETE)
 async def delete_dish(dish_id: int, services: Services = Depends(service_stub)):
+    """
+    Delete dish
+
+    :param dish_id: id of target dish
+    :param services: Services for business logic
+    :return: json response with message field
+    """
     dish = await services.dishes_service.delete(dish_id)
 
     return JSONResponse(content={"status": dish, "message": "The dish has been deleted"})

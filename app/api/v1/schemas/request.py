@@ -2,6 +2,7 @@ from pydantic import BaseModel
 
 
 class Menu(BaseModel):
+    """ Request schema of Menu(Submenu) model """
     title: str
     description: str
 
@@ -15,6 +16,7 @@ class Menu(BaseModel):
 
 
 class Dish(Menu):
+    """ Request schema of Dish model """
     price: float
 
     class Config:

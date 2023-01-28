@@ -15,6 +15,13 @@ submenu_router = APIRouter(prefix="/menus/{menu_id}/submenus")
     response_model=list[res_model.SubMenu]
 )
 async def get_all_submenus(menu_id: int, services: Services = Depends(service_stub)):
+    """
+    Get list of submenus of target menu
+
+    :param menu_id: id of target menu
+    :param services: Services for business logic
+    :return: list of submenus
+    """
     submenus = await services.submenu_service.get_list(menu_id=menu_id)
 
     return submenus
@@ -26,6 +33,13 @@ async def get_all_submenus(menu_id: int, services: Services = Depends(service_st
     response_model=res_model.SubMenu
 )
 async def get_submenu_information(submenu_id: int, services: Services = Depends(service_stub)):
+    """
+    Get detailed info about submenu
+
+    :param submenu_id: id of target submenu
+    :param services: Services for business logic
+    :return: target SubMenu or not found
+    """
     submenu = await services.submenu_service.get_detail(submenu_id=submenu_id)
 
     return submenu
@@ -37,6 +51,14 @@ async def get_submenu_information(submenu_id: int, services: Services = Depends(
     response_model=res_model.SubMenu, status_code=201
 )
 async def create_submenu(menu_id: int, submenu: req_model.Menu, services: Services = Depends(service_stub)):
+    """
+    Create new submenu for a target menu
+
+    :param menu_id: id of target menu
+    :param submenu: parser SubMenu model from request
+    :param services: Services for business logic
+    :return: model of created SubMenu
+    """
     submenu = await services.submenu_service.create(
         menu_id=menu_id,
         title=submenu.title,
@@ -55,6 +77,14 @@ async def update_submenu_information(
         submenu_id: int,
         submenu: req_model.Menu, services: Services = Depends(service_stub)
 ):
+    """
+    Update an exists submenu
+
+    :param submenu_id: id of target submenu
+    :param submenu: parser SubMenu model from request
+    :param services: Services for business logic
+    :return: updated SubMenu model
+    """
     submenu = await services.submenu_service.update(submenu_id, title=submenu.title, description=submenu.description)
 
     return submenu
@@ -65,6 +95,13 @@ async def update_submenu_information(
     tags=["Submenu"], description=SubMenuApiDocs.DELETE, summary=SubMenuApiDocs.DELETE
 )
 async def delete_submenu(submenu_id: int, services: Services = Depends(service_stub)):
+    """
+    Delete submenu
+
+    :param submenu_id: id of target submenu
+    :param services: Services for business logic
+    :return: json response with message field
+    """
     menu = await services.submenu_service.delete(submenu_id=submenu_id)
 
     return JSONResponse(content={"status": menu, "message": "The submenu has been deleted"})

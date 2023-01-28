@@ -15,6 +15,12 @@ menu_router = APIRouter(prefix="/menus")
     response_model=list[res_model.Menu]
 )
 async def get_menus(services: Services = Depends(service_stub)):
+    """
+    Get list of all menus
+
+    :param services: Services for business logic
+    :return: list of Menu
+    """
     all_menus = await services.menu_service.get_list()
 
     return all_menus
@@ -26,6 +32,13 @@ async def get_menus(services: Services = Depends(service_stub)):
     response_model=res_model.Menu, status_code=201
 )
 async def create_menu(menu: req_model.Menu, services: Services = Depends(service_stub)):
+    """
+    Create new menu
+
+    :param menu: parser Menu model from request
+    :param services: Services for business logic
+    :return: model of created Menu
+    """
     menu = await services.menu_service.create(title=menu.title, description=menu.description)
 
     return menu
@@ -37,6 +50,13 @@ async def create_menu(menu: req_model.Menu, services: Services = Depends(service
     response_model=res_model.Menu
 )
 async def get_menu_information(menu_id: int, services: Services = Depends(service_stub)):
+    """
+    Get detailed info about menu with submenus and dishes count
+
+    :param menu_id: id of target menu
+    :param services: Services for business logic
+    :return: target Menu ot not found
+    """
     menu = await services.menu_service.get_detail(menu_id=menu_id)
 
     return menu
@@ -48,6 +68,14 @@ async def get_menu_information(menu_id: int, services: Services = Depends(servic
     response_model=res_model.Menu
 )
 async def update_menu_information(menu_id: int, menu: req_model.Menu, services: Services = Depends(service_stub)):
+    """
+    Update an exists menu
+
+    :param menu_id: id of target menu
+    :param menu: parser Menu model from request
+    :param services: Services for business logic
+    :return: updated Menu model
+    """
     menu = await services.menu_service.update(menu_id, title=menu.title, description=menu.description)
 
     return menu
@@ -55,6 +83,13 @@ async def update_menu_information(menu_id: int, menu: req_model.Menu, services: 
 
 @menu_router.delete("/{menu_id}", tags=["Menu"], description=MenuApiDocs.DELETE, summary=MenuApiDocs.DELETE)
 async def delete_menu(menu_id: int, services: Services = Depends(service_stub)):
+    """
+    Delete menu
+
+    :param menu_id: id of target menu
+    :param services: Services for business logic
+    :return: json response with message field
+    """
     menu = await services.menu_service.delete(menu_id)
 
     return JSONResponse(content={"status": menu, "message": "The menu has been deleted"})

@@ -15,6 +15,11 @@ class DBProvider:
         self.pool = pool
 
     async def get_repo(self) -> typing.Generator:
+        """
+        Generator for Repo class object
+
+        :return: repo object
+        """
         session: AsyncSession = self.pool()
 
         try:
