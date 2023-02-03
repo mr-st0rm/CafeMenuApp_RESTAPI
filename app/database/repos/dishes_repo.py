@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import Numeric, func, select
 
 from app.database.models import Dishes
 from app.database.repos import SQLAlchemyRepo
@@ -53,7 +53,7 @@ class DishesRepo(SQLAlchemyRepo):
             sub_menu_id=submenu_id,
             title=title,
             description=desc,
-            price=round(price, 2),
+            price=func.round(func.cast(price, Numeric), 2),
         )
 
         self.session.add(dish)

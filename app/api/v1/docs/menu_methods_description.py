@@ -26,3 +26,7 @@ class DishApiDocs:
     POST_CREATE = "Create new dish"
     PATCH_UPDATE = "Update an existing dish"
     DELETE = "Delete an existing dish"
+
+
+class FillDatabaseDocs:
+    POST_FILL = "Fill database with any records"

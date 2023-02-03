@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
 
 from app.api.v1.docs.menu_methods_description import MenuApiDocs
@@ -34,7 +34,7 @@ async def get_menus(services: Services = Depends(service_stub)):
     description=MenuApiDocs.POST_CREATE,
     summary=MenuApiDocs.POST_CREATE,
     response_model=res_model.Menu,
-    status_code=201,
+    status_code=status.HTTP_201_CREATED,
 )
 async def create_menu(
     menu: req_model.Menu, services: Services = Depends(service_stub)

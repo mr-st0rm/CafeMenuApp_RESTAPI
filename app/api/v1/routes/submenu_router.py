@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
 
 from app.api.v1.docs.menu_methods_description import SubMenuApiDocs
@@ -59,7 +59,7 @@ async def get_submenu_information(
     description=SubMenuApiDocs.POST_CREATE,
     summary=SubMenuApiDocs.POST_CREATE,
     response_model=res_model.SubMenu,
-    status_code=201,
+    status_code=status.HTTP_201_CREATED,
 )
 async def create_submenu(
     menu_id: int,

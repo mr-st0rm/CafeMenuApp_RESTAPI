@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
 
 from app.api.v1.docs.menu_methods_description import DishApiDocs
@@ -58,7 +58,7 @@ async def get_dish_information(
     description=DishApiDocs.POST_CREATE,
     summary=DishApiDocs.POST_CREATE,
     response_model=res_model.Dish,
-    status_code=201,
+    status_code=status.HTTP_201_CREATED,
 )
 async def create_dish(
     submenu_id: int,
