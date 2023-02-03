@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
+import sqlalchemy as sa
 from sqlalchemy.orm import relationship
 
 from app.database.models import BaseModel
@@ -7,17 +7,19 @@ from app.database.models import BaseModel
 class SubMenus(BaseModel):  # type: ignore
     __tablename__ = "sub_menus"
 
-    id = Column(Integer, primary_key=True)
+    id = sa.Column(sa.Integer, primary_key=True)
 
-    title = Column(String)
-    description = Column(String)
+    title = sa.Column(sa.String)
+    description = sa.Column(sa.String)
 
-    menu_id = Column(Integer, ForeignKey("menus.id", ondelete="CASCADE"))
+    menu_id = sa.Column(
+        sa.Integer, sa.ForeignKey("menus.id", ondelete="CASCADE")
+    )
     dishes = relationship(
         "Dishes", backref="submenu", lazy="selectin", cascade="all, delete"
     )
 
-    created_date = Column(DateTime(timezone=True), default=func.now())
+    created_date = sa.Column(sa.DateTime(timezone=True), default=sa.func.now())
 
     def __repr__(self):
         return f"{self.id} - {self.title}"

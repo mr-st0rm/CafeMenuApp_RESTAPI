@@ -1,12 +1,4 @@
-from sqlalchemy import (
-    Column,
-    DateTime,
-    ForeignKey,
-    Integer,
-    Numeric,
-    String,
-    func,
-)
+import sqlalchemy as sa
 
 from app.database.models import BaseModel
 
@@ -14,17 +6,17 @@ from app.database.models import BaseModel
 class Dishes(BaseModel):
     __tablename__ = "dishes"
 
-    id = Column(Integer, primary_key=True)
+    id = sa.Column(sa.Integer, primary_key=True)
 
-    title = Column(String)
-    description = Column(String)
-    price = Column(Numeric(scale=2), nullable=False)
+    title = sa.Column(sa.String)
+    description = sa.Column(sa.String)
+    price = sa.Column(sa.Numeric(scale=2), nullable=False)
 
-    sub_menu_id = Column(
-        Integer, ForeignKey("sub_menus.id", ondelete="CASCADE")
+    sub_menu_id = sa.Column(
+        sa.Integer, sa.ForeignKey("sub_menus.id", ondelete="CASCADE")
     )
 
-    created_date = Column(DateTime(timezone=True), default=func.now())
+    created_date = sa.Column(sa.DateTime(timezone=True), default=sa.func.now())
 
     def __repr__(self):
         return f"{self.id} - {self.title}"
