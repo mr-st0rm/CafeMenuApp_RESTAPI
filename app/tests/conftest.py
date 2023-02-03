@@ -12,7 +12,7 @@ async def async_client() -> AsyncClient:
 
     :return: AsyncClient object
     """
-    app = await get_app(load_config('.test.env'))
+    app = await get_app(load_config(".test.env"))
 
     async with AsyncClient(app=app, base_url="http://tester") as client:
         yield client

@@ -23,8 +23,11 @@ class SubMenuRepo(SQLAlchemyRepo):
         :param menu_id: target menu id
         :return: list of SubMenus objects
         """
-        smtp = select(SubMenus).where(
-            SubMenus.menu_id == menu_id).order_by(SubMenus.id)
+        smtp = (
+            select(SubMenus)
+            .where(SubMenus.menu_id == menu_id)
+            .order_by(SubMenus.id)
+        )
         submenus = await self.session.scalars(smtp)
 
         return submenus.all()
@@ -40,7 +43,9 @@ class SubMenuRepo(SQLAlchemyRepo):
 
         return submenu
 
-    async def create_submenu(self, menu_id: int, title: str, desc: str) -> SubMenus:
+    async def create_submenu(
+        self, menu_id: int, title: str, desc: str
+    ) -> SubMenus:
         """
         Create new submenu record in database
 
@@ -57,13 +62,15 @@ class SubMenuRepo(SQLAlchemyRepo):
 
         return submenu
 
-    async def update_submenu(self, submenu_id: int, **kwargs) -> SubMenus:
+    async def update_submenu(
+        self, submenu_id: int, **kwargs
+    ) -> SubMenus | None:
         """
+        Update target submenu
 
-
-        :param submenu_id:
-        :param kwargs:
-        :return:
+        :param submenu_id: target submenu id
+        :param kwargs: submenu attributes
+        :return: optional updated Submenu
         """
         submenu = await self._get_submenu(submenu_id)
 

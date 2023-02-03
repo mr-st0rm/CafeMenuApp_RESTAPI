@@ -1,7 +1,12 @@
 import os
+from typing import TYPE_CHECKING
 
 import environs
-from pydantic.dataclasses import dataclass
+
+if TYPE_CHECKING:
+    from dataclasses import dataclass
+else:
+    from pydantic.dataclasses import dataclass
 
 
 @dataclass
@@ -54,11 +59,11 @@ def load_config(cfg_path: str = ".prod.env") -> AppConfig:
             port=env.int("PG_PORT"),
             user=env.str("POSTGRES_USER"),
             password=env.str("POSTGRES_PASSWORD"),
-            db_name=env.str("POSTGRES_DB")
+            db_name=env.str("POSTGRES_DB"),
         ),
         redis=RedisCache(
             host=env.str("RS_HOST"),
             port=env.int("RS_PORT"),
             db_id=env.int("RS_DB"),
-        )
+        ),
     )

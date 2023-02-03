@@ -30,6 +30,8 @@ class RedisRepo:
         if data:
             return pickle.loads(data)
 
+        return None
+
     async def clear(self, *args):
         """
         Clear redis db by keys or flush db

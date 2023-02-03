@@ -12,9 +12,7 @@ def make_connection_string(db: DataBase, async_fallback: bool = False) -> str:
     :param async_fallback: fallback flag
     :return: string
     """
-    result = (
-        f"postgresql+asyncpg://{db.user}:{db.password}@{db.host}:{db.port}/{db.db_name}"
-    )
+    result = f"postgresql+asyncpg://{db.user}:{db.password}@{db.host}:{db.port}/{db.db_name}"
     if async_fallback:
         result += "?async_fallback=True"
     return result

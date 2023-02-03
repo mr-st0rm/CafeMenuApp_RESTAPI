@@ -5,19 +5,23 @@ from app.services import AbstractService, ServiceMixin
 
 
 class SubmenuService(AbstractService, ServiceMixin):
-    async def get_detail(self, submenu_id: int) -> SubMenus:
+    async def get_detail(self, submenu_id: int) -> SubMenus | None:
         """
         Get submenu object(db, cache) or raise error(404)
 
         :param submenu_id: target submenu id
         :return: submenu object
         """
-        cached_submenu = await self.redis_cache.get_data(f"submenu:{submenu_id}")
+        cached_submenu = await self.redis_cache.get_data(
+            f"submenu:{submenu_id}"
+        )
 
         if cached_submenu:
             return cached_submenu
 
-        submenu = await self.repo.submenu_info(submenu_id=submenu_id)
+        submenu = await self.main_repo.submenu.submenu_info(
+            submenu_id=submenu_id
+        )
 
         if not submenu:
             raise HTTPException(status_code=404, detail="submenu not found")
@@ -34,7 +38,9 @@ class SubmenuService(AbstractService, ServiceMixin):
         :param menu_id: target menu id where submenus linked
         :return: list of submenu objects
         """
-        cached_submenus = await self.redis_cache.get_data(f"submenus:{menu_id}")
+        cached_submenus = await self.redis_cache.get_data(
+            f"submenus:{menu_id}"
+        )
 
         if cached_submenus:
             return cached_submenus
@@ -49,7 +55,9 @@ class SubmenuService(AbstractService, ServiceMixin):
 
         return submenus
 
-    async def create(self, menu_id: int, title: str, description: str) -> SubMenus:
+    async def create(
+        self, menu_id: int, title: str, description: str
+    ) -> SubMenus:
         """
 
 
@@ -58,13 +66,15 @@ class SubmenuService(AbstractService, ServiceMixin):
         :param description:
         :return:
         """
-        submenu = await self.repo.create_submenu(menu_id=menu_id, title=title, desc=description)
+        submenu = await self.main_repo.submenu.create_submenu(
+            menu_id=menu_id, title=title, desc=description
+        )
 
         await self.redis_cache.clear()
 
         return self.calculate_count_dishes(submenu)
 
-    async def update(self, submenu_id: int, **kwargs) -> SubMenus:
+    async def update(self, submenu_id: int, **kwargs) -> SubMenus | None:
         """
         Update submenu(db) and clear submenus list from cache
 
@@ -72,18 +82,27 @@ class SubmenuService(AbstractService, ServiceMixin):
         :param kwargs: attributes of submenu
         :return: updated object of SubMenus
         """
-        submenu = await self.repo.submenu_info(submenu_id=submenu_id)
+        submenu = await self.main_repo.submenu.submenu_info(
+            submenu_id=submenu_id
+        )
 
         if not submenu:
             raise HTTPException(status_code=404, detail="menu not found")
 
-        submenu = await self.repo.update_submenu(submenu_id, **kwargs)
+        updated_submenu = await self.main_repo.submenu.update_submenu(
+            submenu_id, **kwargs
+        )
 
-        updated_submenu = self.calculate_count_dishes(submenu)
-        await self.redis_cache.save(f"submenu:{submenu.id}", updated_submenu)
-        await self.redis_cache.clear(f"submenus:{submenu.menu_id}")
+        if updated_submenu:
+            updated_submenu = self.calculate_count_dishes(updated_submenu)
+            await self.redis_cache.save(
+                f"submenu:{updated_submenu.id}", updated_submenu
+            )
+            await self.redis_cache.clear(f"submenus:{updated_submenu.menu_id}")
 
-        return updated_submenu
+            return updated_submenu
+
+        return None
 
     async def delete(self, submenu_id: int) -> bool:
         """
@@ -92,12 +111,14 @@ class SubmenuService(AbstractService, ServiceMixin):
         :param submenu_id: target submenu id
         :return: bool
         """
-        submenu = await self.repo.submenu_info(submenu_id=submenu_id)
+        submenu = await self.main_repo.submenu.submenu_info(
+            submenu_id=submenu_id
+        )
 
         if not submenu:
             raise HTTPException(status_code=404, detail="submenu not found")
 
-        await self.repo.delete_submenu(submenu_id=submenu_id)
+        await self.main_repo.submenu.delete_submenu(submenu_id=submenu_id)
         await self.redis_cache.clear()
 
         return True
@@ -117,7 +138,9 @@ class SubmenuService(AbstractService, ServiceMixin):
         return submenu
 
     @staticmethod
-    def calculate_count_dishes_list(submenus: list[SubMenus]) -> list[SubMenus]:
+    def calculate_count_dishes_list(
+        submenus: list[SubMenus],
+    ) -> list[SubMenus]:
         """
         Calculate dishes count for submenus
 

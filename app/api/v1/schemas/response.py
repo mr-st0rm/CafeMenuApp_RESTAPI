@@ -7,23 +7,27 @@ class OrmModeOn(BaseModel):
 
 
 class BaseMenu(OrmModeOn):
-    """ Base response model for orm-models """
+    """Base response model for orm-models"""
+
     id: str
     title: str
     description: str
 
 
 class Menu(BaseMenu):
-    """ Response model of Menu """
+    """Response model of Menu"""
+
     submenus_count: int
     dishes_count: int
 
 
 class SubMenu(BaseMenu):
-    """ Response model of SubMenu """
+    """Response model of SubMenu"""
+
     dishes_count: int
 
 
 class Dish(BaseMenu):
-    """ Response model of Dish """
+    """Response model of Dish"""
+
     price: str

@@ -24,15 +24,15 @@ class Services:
     dishes_service: DishesService
 
 
-def get_service(repo: Repo = Depends(repo_stub), redis: Redis = Depends(redis_stub)):
+def get_service(
+    repo: Repo = Depends(repo_stub), redis: Redis = Depends(redis_stub)
+):
     redis = RedisRepo(redis)
 
     service = Services(
-        menu_service=MenuService(repo=repo.menu, main_repo=repo, redis=redis),
-        submenu_service=SubmenuService(
-            repo=repo.submenu, main_repo=repo, redis=redis),
-        dishes_service=DishesService(
-            repo=repo.dish, main_repo=repo, redis=redis),
+        menu_service=MenuService(main_repo=repo, redis=redis),
+        submenu_service=SubmenuService(main_repo=repo, redis=redis),
+        dishes_service=DishesService(main_repo=repo, redis=redis),
     )
 
     yield service

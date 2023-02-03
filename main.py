@@ -11,7 +11,7 @@ from app.api import register_api_routes
 from app.config.cfg import AppConfig, DataBase, load_config
 from app.database import get_engine
 from app.database.models import BaseModel
-from app.database.redis_cache import redis_stub, RedisProvider
+from app.database.redis_cache import RedisProvider, redis_stub
 from app.database.session_schema import DBProvider, repo_stub
 from app.services.service import get_service, service_stub
 

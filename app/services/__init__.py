@@ -1,7 +1,13 @@
 from abc import ABC, abstractmethod
 
 
-from app.database.repos.repo import RedisRepo, MenuRepo, SubMenuRepo, DishesRepo, Repo
+from app.database.repos.repo import (
+    RedisRepo,
+    MenuRepo,
+    SubMenuRepo,
+    DishesRepo,
+    Repo,
+)
 
 
 class AbstractService(ABC):
@@ -28,11 +34,9 @@ class AbstractService(ABC):
 
 class ServiceMixin:
     def __init__(
-            self,
-            repo: MenuRepo | SubMenuRepo | DishesRepo,
-            main_repo: Repo | None = None,
-            redis: RedisRepo | None = None
+        self,
+        main_repo: Repo,
+        redis: RedisRepo,
     ):
-        self.repo = repo
-        self.main_repo = main_repo
-        self.redis_cache = redis
+        self.main_repo: Repo = main_repo
+        self.redis_cache: RedisRepo = redis

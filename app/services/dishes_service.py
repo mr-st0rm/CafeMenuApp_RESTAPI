@@ -17,7 +17,7 @@ class DishesService(AbstractService, ServiceMixin):
         if cached_dish:
             return cached_dish
 
-        dish = await self.repo.dish_info(dish_id)
+        dish = await self.main_repo.dish.dish_info(dish_id)
 
         if not dish:
             raise HTTPException(status_code=404, detail="dish not found")
@@ -37,12 +37,14 @@ class DishesService(AbstractService, ServiceMixin):
         if cached_dishes:
             return cached_dishes
 
-        dishes = await self.repo.get_all_dishes()
+        dishes = await self.main_repo.dish.get_all_dishes()
         await self.redis_cache.save("dishes", dishes)
 
         return dishes
 
-    async def create(self, submenu_id: int, title: str, description: str, price: float) -> Dishes:
+    async def create(
+        self, submenu_id: int, title: str, description: str, price: float
+    ) -> Dishes:
         """
         Create new dish and clear cache
 
@@ -52,17 +54,21 @@ class DishesService(AbstractService, ServiceMixin):
         :param price: float
         :return: created dish object
         """
-        submenu = await self.main_repo.submenu.submenu_info(submenu_id=submenu_id)
+        submenu = await self.main_repo.submenu.submenu_info(
+            submenu_id=submenu_id
+        )
 
         if not submenu:
             raise HTTPException(status_code=404, detail="submenu not found")
 
-        dish = await self.repo.create_dish(submenu_id=submenu_id, title=title, desc=description, price=price)
+        dish = await self.main_repo.dish.create_dish(
+            submenu_id=submenu_id, title=title, desc=description, price=price
+        )
         await self.redis_cache.clear()
 
         return dish
 
-    async def update(self, dish_id: int, **kwargs) -> Dishes:
+    async def update(self, dish_id: int, **kwargs) -> Dishes | None:
         """
         Update dish(db) and clear dishes list from cache
 
@@ -75,17 +81,22 @@ class DishesService(AbstractService, ServiceMixin):
         if not dish:
             raise HTTPException(status_code=404, detail="dish not found")
 
-        price: float = kwargs.get("price")
+        price = kwargs.get("price")
 
         if price:
             kwargs["price"] = round(price, 2)
 
-        dish = await self.repo.update_dish(dish_id, **kwargs)
+        updated_dish = await self.main_repo.dish.update_dish(dish_id, **kwargs)
 
-        await self.redis_cache.save(f"dish:{dish.id}", dish)
-        await self.redis_cache.clear("dishes")
+        if updated_dish:
+            await self.redis_cache.save(
+                f"dish:{updated_dish.id}", updated_dish
+            )
+            await self.redis_cache.clear("dishes")
 
-        return dish
+            return updated_dish
+
+        return None
 
     async def delete(self, dish_id: int) -> bool:
         """
@@ -94,12 +105,12 @@ class DishesService(AbstractService, ServiceMixin):
         :param dish_id: target dish id
         :return: bool
         """
-        dish = await self.repo.dish_info(dish_id=dish_id)
+        dish = await self.main_repo.dish.dish_info(dish_id=dish_id)
 
         if not dish:
             raise HTTPException(status_code=404, detail="dish not found")
 
-        await self.repo.delete_dish(dish_id)
+        await self.main_repo.dish.delete_dish(dish_id)
         await self.redis_cache.clear()
 
         return True

@@ -13,11 +13,11 @@ class Repo:
     redis: RedisRepo
 
     def __init__(
-            self,
-            session: AsyncSession,
-            menu: type[MenuRepo],
-            submenu: type[SubMenuRepo],
-            dish: type[DishesRepo]
+        self,
+        session: AsyncSession,
+        menu: type[MenuRepo],
+        submenu: type[SubMenuRepo],
+        dish: type[DishesRepo],
     ):
         self.menu = menu(session)
         self.submenu = submenu(session)

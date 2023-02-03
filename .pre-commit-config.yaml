@@ -1,6 +1,6 @@
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.2.0
+    rev: v4.4.0
     hooks:
       - id: trailing-whitespace
       - id: check-added-large-files
@@ -9,11 +9,18 @@ repos:
       - id: check-merge-conflict
 
 -   repo: https://github.com/asottile/pyupgrade
-    rev: v2.31.1
+    rev: v3.3.1
     hooks:
       - id: pyupgrade
         exclude: __init__.py
         args: [--py310-plus]
+
+-   repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        exclude: __init__.py
+        args: [ --profile, black, --filter-files ]
 
 -   repo: https://github.com/pre-commit/mirrors-autopep8
     rev: v2.0.1
@@ -27,3 +34,15 @@ repos:
       - id: flake8
         exclude: __init__.py
         args: [ "--ignore=E501, F821" ]
+
+-   repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v0.991
+    hooks:
+    -   id: mypy
+
+-   repo: https://github.com/psf/black
+    rev: 23.1.0
+    hooks:
+    - id: black
+      language_version: python3.10
+      args: [--line-length=79]

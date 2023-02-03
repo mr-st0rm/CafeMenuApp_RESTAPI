@@ -1,4 +1,12 @@
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, Numeric, String, func
+from sqlalchemy import (
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    Numeric,
+    String,
+    func,
+)
 
 from app.database.models import BaseModel
 
@@ -12,8 +20,9 @@ class Dishes(BaseModel):
     description = Column(String)
     price = Column(Numeric(scale=2), nullable=False)
 
-    sub_menu_id = Column(Integer, ForeignKey(
-        "sub_menus.id", ondelete="CASCADE"))
+    sub_menu_id = Column(
+        Integer, ForeignKey("sub_menus.id", ondelete="CASCADE")
+    )
 
     created_date = Column(DateTime(timezone=True), default=func.now())
 

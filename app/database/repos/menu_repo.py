@@ -54,7 +54,7 @@ class MenuRepo(SQLAlchemyRepo):
 
         return menu
 
-    async def update_menu(self, menu_id: int, **kwargs) -> Menus:
+    async def update_menu(self, menu_id: int, **kwargs) -> Menus | None:
         """
         Update menu
 

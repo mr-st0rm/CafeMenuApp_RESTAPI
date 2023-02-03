@@ -37,7 +37,9 @@ class DishesRepo(SQLAlchemyRepo):
 
         return (await self.session.scalars(smtp)).all()
 
-    async def create_dish(self, submenu_id: int, title: str, desc: str, price: float) -> Dishes:
+    async def create_dish(
+        self, submenu_id: int, title: str, desc: str, price: float
+    ) -> Dishes:
         """
         Create new dish record in database
 
@@ -47,8 +49,12 @@ class DishesRepo(SQLAlchemyRepo):
         :param price: price of dish (.2) float|int
         :return: created record in object view
         """
-        dish = Dishes(sub_menu_id=submenu_id, title=title,
-                      description=desc, price=round(price, 2))
+        dish = Dishes(
+            sub_menu_id=submenu_id,
+            title=title,
+            description=desc,
+            price=round(price, 2),
+        )
 
         self.session.add(dish)
         await self.session.commit()
@@ -56,7 +62,7 @@ class DishesRepo(SQLAlchemyRepo):
 
         return dish
 
-    async def update_dish(self, dish_id: int, **kwargs) -> Dishes:
+    async def update_dish(self, dish_id: int, **kwargs) -> Dishes | None:
         """
         Update dish
 
