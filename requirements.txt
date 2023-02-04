@@ -9,3 +9,6 @@ httpx==0.23.3
 environs==9.5.0
 pre-commit==3.0.1
 aioredis==2.0.1
+celery==5.2.7
+kombu==5.2.4
+XlsxWriter==3.0.8

@@ -31,3 +31,12 @@ class Dish(BaseMenu):
     """Response model of Dish"""
 
     price: str
+
+
+class CreatedTask(BaseModel):
+    task_id: str
+
+
+class DetailedTask(CreatedTask):
+    status: str
+    result: str | None

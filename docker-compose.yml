@@ -19,7 +19,11 @@ services:
       - web_main_api
     restart: on-failure
     depends_on:
+      celery:
+        condition: service_started
       db:
+        condition: service_healthy
+      cache_data:
         condition: service_healthy
 
   cache_data:
@@ -34,7 +38,7 @@ services:
     networks:
       - web_main_api
     healthcheck:
-      test: ["CMD", "redis-cli","ping"]
+      test: [ "CMD", "redis-cli","ping" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -57,10 +61,43 @@ services:
     networks:
       - web_main_api
 
+  rabbitmq:
+    container_name: rabbit-mq
+    image: rabbitmq:3.11.8-alpine
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    expose:
+      - 5672
+    volumes:
+      - rabbit_data:/var/lib/rabbit/data/
+    networks:
+      - web_main_api
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: celery
+    entrypoint: >
+      sh -c "
+        celery -A app.celery.celery_app worker -l info -Q celery -c 2
+      "
+    environment:
+      CONFIG_FILE: ".prod.env"
+    networks:
+      - web_main_api
+    restart: on-failure
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
 
 volumes:
   postgres_data:
   redis_data:
+  rabbit_data:
 
 networks:
   web_main_api:

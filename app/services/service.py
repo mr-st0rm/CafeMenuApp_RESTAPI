@@ -10,7 +10,9 @@ from app.database.session_schema import repo_stub
 from app.services.db_fill.database_fill import DBFillerService
 from app.services.dishes_service import DishesService
 from app.services.menu_service import MenuService
+from app.services.report_generator_service import XLSXReportGenerator
 from app.services.submenu_service import SubmenuService
+from app.services.tasks_service import TasksCeleryService
 
 
 def service_stub():
@@ -24,6 +26,8 @@ class Services:
     submenu_service: SubmenuService
     dishes_service: DishesService
     db_service: DBFillerService
+    report_generator_service: XLSXReportGenerator
+    tasks_service: TasksCeleryService
 
 
 def get_service(
@@ -36,6 +40,10 @@ def get_service(
         submenu_service=SubmenuService(main_repo=repo, redis=redis),
         dishes_service=DishesService(main_repo=repo, redis=redis),
         db_service=DBFillerService(main_repo=repo, redis=redis),
+        report_generator_service=XLSXReportGenerator(
+            main_repo=repo, redis=redis
+        ),
+        tasks_service=TasksCeleryService(main_repo=repo, redis=redis),
     )
 
     yield service

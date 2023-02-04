@@ -30,3 +30,8 @@ class DishApiDocs:
 
 class FillDatabaseDocs:
     POST_FILL = "Fill database with any records"
+
+
+class ReportGenerators:
+    POST_XLSX = "Create task in celery for generating .xlsx report"
+    GET_XLSX = "Get detailed information about task"

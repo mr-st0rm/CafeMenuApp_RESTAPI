@@ -3,9 +3,6 @@ from abc import ABC, abstractmethod
 
 from app.database.repos.repo import (
     RedisRepo,
-    MenuRepo,
-    SubMenuRepo,
-    DishesRepo,
     Repo,
 )
 

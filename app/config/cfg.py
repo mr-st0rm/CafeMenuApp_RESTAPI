@@ -32,10 +32,17 @@ class RedisCache:
 
 
 @dataclass
+class CeleryApp:
+    broker_url: str
+    result_backend: str
+
+
+@dataclass
 class AppConfig:
     app: FastApiApp
     db: DataBase
     redis: RedisCache
+    celery: CeleryApp
 
 
 def load_config(cfg_path: str = ".prod.env") -> AppConfig:
@@ -65,5 +72,9 @@ def load_config(cfg_path: str = ".prod.env") -> AppConfig:
             host=env.str("RS_HOST"),
             port=env.int("RS_PORT"),
             db_id=env.int("RS_DB"),
+        ),
+        celery=CeleryApp(
+            broker_url=env.str("C_BROKER_URL"),
+            result_backend=env.str("C_RESULT_BACKEND"),
         ),
     )

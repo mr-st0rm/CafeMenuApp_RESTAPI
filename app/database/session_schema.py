@@ -2,7 +2,13 @@ import typing
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.database.repos.repo import DishesRepo, MenuRepo, Repo, SubMenuRepo
+from app.database.repos.repo import (
+    DishesRepo,
+    GrabberDBRepo,
+    MenuRepo,
+    Repo,
+    SubMenuRepo,
+)
 
 
 def repo_stub():
@@ -23,7 +29,9 @@ class DBProvider:
         session: AsyncSession = self.pool()
 
         try:
-            repo = Repo(session, MenuRepo, SubMenuRepo, DishesRepo)
+            repo = Repo(
+                session, MenuRepo, SubMenuRepo, DishesRepo, GrabberDBRepo
+            )
             yield repo
         finally:
             await session.close()
