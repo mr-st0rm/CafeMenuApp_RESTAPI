@@ -24,7 +24,11 @@ API написано на FastAPI с использованием ORM **SqlAlche
 ### Генерация записей в БД для экспорта .xls файла
 - **POST** запрос с пустым телом на URL - `http://127.0.0.1:8000/api/v1/fill_db`
 
-### URI для запросов основного меню:
+### URL для создания task'ов в Celery
+- **POST** запрос с пустым телом на - `http://127.0.0.1:8000/api/v1/report/xlsx`
+- **GET** запрос с task_id в URL запроса - `http://127.0.0.1:8000/api/v1/report/xlsx/task_id`
+
+### URL для запросов основного меню:
 - GET /menus - получение всех меню
 - POST /menus - создание меню
 - GET /menus/{menu_id} - подробная информация о конкретном меню
@@ -35,7 +39,7 @@ API написано на FastAPI с использованием ORM **SqlAlche
 - submenus_count
 - dishes_count
 
-### URI для запросов подменю:
+### URL для запросов подменю:
 - GET /menus/{menu_id}/submenus - получение всех подменю конкретного меню
 - POST /menus/{menu_id}/submenus - создание подменю
 - GET /menus/{menu_id}/submenus/{submenu_id} - подробная информация о конкретном подменю
@@ -45,7 +49,7 @@ API написано на FastAPI с использованием ORM **SqlAlche
 **Дополнительно в ответе на GET запросы присутствует количество всех блюд**
 - dishes_count
 
-### URI для запросов блюд:
+### URL для запросов блюд:
 - GET /menus/{menu_id}/submenus/{submenu_id}/dishes - получение всех блюд
 - POST /menus/{menu_id}/submenus/{submenu_id}/dishes - создание блюда
 - GET /menus/{menu_id}/submenus/{submenu_id}/dishes/{dish_id} - подробная информация о конкретном блюде
