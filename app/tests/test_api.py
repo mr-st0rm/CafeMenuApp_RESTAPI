@@ -182,7 +182,9 @@ class TestRestApi:
     async def test_dishes_list(self, async_client: AsyncClient):
         response = await async_client.get(
             self.LOCAL_URL.format(
-                f"menus/{MenuTempStorage.id}/submenus/{SubmenuTempStorage.id}/dishes/"
+                f"menus/{MenuTempStorage.id}/"
+                f"submenus/{SubmenuTempStorage.id}/"
+                f"dishes/"
             )
         )
 
@@ -197,7 +199,9 @@ class TestRestApi:
         }
         response = await async_client.post(
             self.LOCAL_URL.format(
-                f"menus/{MenuTempStorage.id}/submenus/{SubmenuTempStorage.id}/dishes/"
+                f"menus/{MenuTempStorage.id}/"
+                f"submenus/{SubmenuTempStorage.id}/"
+                f"dishes/"
             ),
             json=data,
         )
@@ -220,7 +224,9 @@ class TestRestApi:
     async def test_dishes_list_not_empty(self, async_client: AsyncClient):
         response = await async_client.get(
             self.LOCAL_URL.format(
-                f"menus/{MenuTempStorage.id}/submenus/{SubmenuTempStorage.id}/dishes/"
+                f"menus/{MenuTempStorage.id}/"
+                f"submenus/{SubmenuTempStorage.id}/"
+                f"dishes/"
             )
         )
 
@@ -230,7 +236,9 @@ class TestRestApi:
     async def test_target_dish(self, async_client: AsyncClient):
         response = await async_client.get(
             self.LOCAL_URL.format(
-                f"menus/{MenuTempStorage.id}/submenus/{SubmenuTempStorage.id}/dishes/{DishesTempStorage.id}"
+                f"menus/{MenuTempStorage.id}/"
+                f"submenus/{SubmenuTempStorage.id}/"
+                f"dishes/{DishesTempStorage.id}"
             )
         )
         response_json = response.json()
@@ -251,7 +259,9 @@ class TestRestApi:
         }
         response = await async_client.patch(
             self.LOCAL_URL.format(
-                f"menus/{MenuTempStorage.id}/submenus/{SubmenuTempStorage.id}/dishes/{DishesTempStorage.id}"
+                f"menus/{MenuTempStorage.id}/"
+                f"submenus/{SubmenuTempStorage.id}/"
+                f"dishes/{DishesTempStorage.id}"
             ),
             json=data,
         )
@@ -293,7 +303,8 @@ class TestRestApi:
     async def test_submenu_counter(self, async_client: AsyncClient):
         response = await async_client.get(
             self.LOCAL_URL.format(
-                f"menus/{MenuTempStorage.id}/submenus/{SubmenuTempStorage.id}"
+                f"menus/{MenuTempStorage.id}/"
+                f"submenus/{SubmenuTempStorage.id}"
             )
         )
         response_json = response.json()
@@ -305,7 +316,8 @@ class TestRestApi:
     async def test_delete_submenu(self, async_client: AsyncClient):
         response = await async_client.delete(
             self.LOCAL_URL.format(
-                f"menus/{MenuTempStorage.id}/submenus/{SubmenuTempStorage.id}"
+                f"menus/{MenuTempStorage.id}/"
+                f"submenus/{SubmenuTempStorage.id}"
             )
         )
 

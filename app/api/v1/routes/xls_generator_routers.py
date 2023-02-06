@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, status
+from fastapi.responses import FileResponse
 
 from app.api.v1.docs.menu_methods_description import ReportGenerators
 from app.api.v1.schemas import response as res_model
@@ -48,6 +49,28 @@ async def get_status_of_task_xlsx(
     :param task_id: target task id
     :return: detailed info about task
     """
-    task = services.tasks_service.get_task(task_id)
+    task = services.tasks_service.get_task_result(task_id)
 
     return task
+
+
+@xlsx_generator_router.get(
+    "/xlsx/download/f/{file_name}",
+    tags=["Report generators"],
+    description=ReportGenerators.DOWNLOAD_XLSX,
+    summary=ReportGenerators.DOWNLOAD_XLSX,
+    responses={status.HTTP_404_NOT_FOUND: {"detail": "menu report not found"}},
+)
+async def download_xlsx_report_if_exists(
+    file_name: str, services: Services = Depends(service_stub)
+) -> FileResponse:
+    """
+    Download from reports folder report by name file_name if exists
+
+    :param file_name: name of report
+    :param services: Services for application
+    :return: FileResponse or NotFound
+    """
+    return await services.tasks_service.download_report_by_task_result(
+        file_name
+    )

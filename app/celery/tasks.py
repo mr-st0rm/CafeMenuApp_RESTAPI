@@ -9,8 +9,8 @@ from .celery_app import celery
 
 @celery.task(name="app.create_report_xlsx:celery")
 def create_report_xlsx(menus_list: list[dict]):
-    name = f"reports/{uuid.uuid4().hex}.xlsx"
-    generate_xlsx(name, menus_list)
+    name = f"{uuid.uuid4().hex}.xlsx"
+    generate_xlsx(f"reports/{name}", menus_list)
 
     return name
 

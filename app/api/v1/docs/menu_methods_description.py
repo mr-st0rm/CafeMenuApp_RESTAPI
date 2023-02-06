@@ -35,3 +35,4 @@ class FillDatabaseDocs:
 class ReportGenerators:
     POST_XLSX = "Create task in celery for generating .xlsx report"
     GET_XLSX = "Get detailed information about task"
+    DOWNLOAD_XLSX = "Download generated .xlsx report"

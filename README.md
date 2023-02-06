@@ -26,7 +26,8 @@ API написано на FastAPI с использованием ORM **SqlAlche
 
 ### URL для создания task'ов в Celery
 - **POST** запрос с пустым телом на - `http://127.0.0.1:8000/api/v1/report/xlsx`
-- **GET** запрос с task_id в URL запроса - `http://127.0.0.1:8000/api/v1/report/xlsx/task_id`
+- **GET** запрос с task_id в URL запроса - `http://127.0.0.1:8000/api/v1/report/xlsx/{task_id}`
+- **GET** запрос с именем файла на - `http://127.0.0.1:8000/api/v1/report/xlsx/download/f/{file_name}` 
 
 ### URL для запросов основного меню:
 - GET /menus - получение всех меню

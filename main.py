@@ -48,7 +48,8 @@ async def get_app(cfg: AppConfig) -> FastAPI:
     repo_provider = DBProvider(db_pool)
     redis = RedisProvider(cfg.redis)
 
-    # DI in order to overturn the repository and ensure the independence of the handler from creation of the repository
+    # DI in order to overturn the repository and ensure the independence
+    # of the handler from creation of the repository
     application.dependency_overrides[repo_stub] = repo_provider.get_repo
     application.dependency_overrides[service_stub] = get_service
     application.dependency_overrides[redis_stub] = redis.get_redis
