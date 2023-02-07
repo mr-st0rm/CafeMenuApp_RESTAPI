@@ -60,6 +60,7 @@ async def get_status_of_task_xlsx(
     description=ReportGenerators.DOWNLOAD_XLSX,
     summary=ReportGenerators.DOWNLOAD_XLSX,
     responses={status.HTTP_404_NOT_FOUND: {"detail": "menu report not found"}},
+    response_class=FileResponse
 )
 async def download_xlsx_report_if_exists(
     file_name: str, services: Services = Depends(service_stub)
