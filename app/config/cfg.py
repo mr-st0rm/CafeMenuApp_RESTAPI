@@ -1,12 +1,7 @@
 import os
-from typing import TYPE_CHECKING
+from dataclasses import dataclass
 
 import environs
-
-if TYPE_CHECKING:
-    from dataclasses import dataclass
-else:
-    from pydantic.dataclasses import dataclass
 
 
 @dataclass
